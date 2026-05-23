@@ -4,8 +4,8 @@
 // ============================================================
 
 // ✅ ใช้ Google Sheet CSV ตรง ๆ (เร็วกว่า allorigins มาก)
-const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSdhbhYiOAA1uUhVgWzxOgFWXp02OgYgkvl39A2GI_QyLISxvWsfO8F_SENWwX_quCy7DfPQ6dbc4YC/pub?gid=0&single=true&output=csv"; 
-const SUCCESS_MESSAGE = "เก็บเป็นความลับนะ! 🤫 ห้ามบอกใคร";
+const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRR0iawH3wcHL7_sj7IwVPQNfOjQCH48ntmWZTwYQTm-d1doGp-7J5HOcAD7J_ShX7lz-tRlXeA1JYu/pub?gid=1807332065&single=true&output=csv"; 
+const SUCCESS_MESSAGE = "ขอบคุณที่มาเล่นกันนะคะ รัก พี่ ๆ น้า";
 
 let pairingData = null;
 
