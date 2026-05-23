@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>🎁 จับคู่ลับ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&family=Mitr:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Sarabun', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 20px;
+  overflow-x: hidden;
+  background: #ddeeff;
+}
+
+/* Soft layered background */
+.bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 0%,   #c8e6ff 0%, transparent 55%),
+    radial-gradient(ellipse 60% 50% at 80% 10%,  #e8f4ff 0%, transparent 50%),
+    radial-gradient(ellipse 70% 60% at 50% 100%, #b8d9f8 0%, transparent 55%),
+    linear-gradient(170deg, #e4f2ff 0%, #cce4fa 40%, #ddeeff 100%);
+}
+
+/* Fluffy cloud blobs */
+.blob {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.45;
+  pointer-events: none;
+  z-index: 0;
+}
+.blob-1 { width: 420px; height: 320px; background: #a8d4f8; top: -80px; left: -100px; animation: drift1 8s ease-in-out infinite; }
+.blob-2 { width: 350px; height: 280px; background: #c4e3ff; top: 30%; right: -80px; animation: drift2 10s ease-in-out infinite; }
+.blob-3 { width: 300px; height: 240px; background: #b0ccf0; bottom: -60px; left: 20%; animation: drift1 9s 2s ease-in-out infinite; }
+.blob-4 { width: 200px; height: 160px; background: #ffffff; top: 15%; left: 30%; opacity: 0.6; animation: drift2 7s 1s ease-in-out infinite; }
+
+.container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 440px;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 28px;
+  animation: floatIn 0.9s cubic-bezier(0.22,1,0.36,1) both;
+}
+.gift-icon {
+  font-size: 4rem;
+  display: block;
+  margin-bottom: 12px;
+  animation: floatBob 4s ease-in-out infinite;
+  filter: drop-shadow(0 8px 20px rgba(100,160,230,0.35));
+}
+.header h1 {
+  font-family: 'Mitr', sans-serif;
+  font-size: 2.4rem;
+  font-weight: 600;
+  color: #2a6bad;
+  letter-spacing: 0.01em;
+  text-shadow: 0 2px 12px rgba(100,180,255,0.25);
+}
+.header h1 span { color: #5ba3e0; }
+.header p {
+  margin-top: 6px;
+  color: #6699bb;
+  font-size: 0.92rem;
+  font-weight: 300;
+}
+
+/* Card */
+.card {
+  background: rgba(255,255,255,0.72);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1.5px solid rgba(255,255,255,0.9);
+  border-radius: 28px;
+  padding: 36px 32px;
+  box-shadow:
+    0 8px 32px rgba(100,160,220,0.12),
+    0 2px 8px rgba(100,160,220,0.08),
+    inset 0 1px 0 rgba(255,255,255,0.95);
+  animation: riseUp 0.9s 0.1s cubic-bezier(0.22,1,0.36,1) both;
+  position: relative;
+}
+
+/* Soft top accent */
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 15%; right: 15%;
+  height: 3px;
+  border-radius: 0 0 8px 8px;
+  background: linear-gradient(90deg, transparent, #7ec8f0, #a8d8ff, #7ec8f0, transparent);
+  opacity: 0.8;
+}
+
+/* Label */
+.input-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #5ba3d8;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+/* Input */
+.input-wrap {
+  position: relative;
+  margin-bottom: 18px;
+}
+.input-wrap .prefix {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9bc4e0;
+  font-weight: 600;
+  font-size: 1rem;
+  pointer-events: none;
+  transition: color 0.2s;
+}
+input {
+  width: 100%;
+  background: rgba(240,250,255,0.8);
+  border: 1.5px solid rgba(150,200,240,0.35);
+  border-radius: 16px;
+  padding: 14px 18px 14px 36px;
+  font-family: 'Sarabun', sans-serif;
+  font-size: 1rem;
+  color: #1a4a72;
+  outline: none;
+  transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+  box-shadow: inset 0 2px 6px rgba(180,220,250,0.2);
+}
+input::placeholder { color: #99bcd4; }
+input:focus {
+  background: rgba(255,255,255,0.95);
+  border-color: rgba(100,180,240,0.6);
+  box-shadow: 0 0 0 4px rgba(120,190,245,0.15), inset 0 2px 4px rgba(180,220,250,0.1);
+}
+input:focus ~ .prefix { color: #5ba3d8; }
+
+/* Button */
+.btn {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 16px;
+  font-family: 'Sarabun', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.18s, box-shadow 0.18s, opacity 0.18s;
+  letter-spacing: 0.04em;
+}
+.btn-primary {
+  background: linear-gradient(135deg, #5aabdf 0%, #3d8ec4 50%, #5aabdf 100%);
+  background-size: 200% 200%;
+  color: #fff;
+  box-shadow:
+    0 6px 20px rgba(80,160,220,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.3);
+  animation: shimmerBtn 3s ease infinite;
+}
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(80,160,220,0.45), inset 0 1px 0 rgba(255,255,255,0.3);
+}
+.btn-primary:active:not(:disabled) { transform: translateY(-1px); }
+.btn-primary:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.btn-ghost {
+  background: rgba(220,238,252,0.5);
+  border: 1.5px solid rgba(150,200,240,0.4);
+  color: #5a99c0;
+  margin-top: 12px;
+  font-size: 0.88rem;
+  padding: 11px;
+  border-radius: 14px;
+}
+.btn-ghost:hover { background: rgba(200,230,250,0.7); color: #3d7ea8; }
+
+/* Loader */
+.loader {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px;
+  color: #7aaecc;
+  font-size: 0.9rem;
+}
+.loader.show { display: flex; }
+.spinner {
+  width: 22px; height: 22px;
+  border: 2.5px solid rgba(150,200,240,0.25);
+  border-top-color: #5aabdf;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+/* Error */
+.error-box {
+  background: rgba(255,180,180,0.12);
+  border: 1.5px solid rgba(255,150,150,0.3);
+  border-radius: 14px;
+  padding: 13px 16px;
+  font-size: 0.88rem;
+  color: #d06060;
+  margin-top: 14px;
+  display: none;
+  line-height: 1.6;
+}
+.error-box.show { display: block; }
+
+/* Result */
+.result-card {
+  display: none;
+  animation: popCloud 0.6s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+.result-card.show { display: block; }
+
+.result-you {
+  background: rgba(240,250,255,0.7);
+  border: 1.5px solid rgba(150,210,245,0.35);
+  border-radius: 18px;
+  padding: 18px 22px;
+  margin-bottom: 8px;
+}
+.result-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #88b8d4;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+.result-name-you {
+  font-family: 'Mitr', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #2a6bad;
+}
+
+.arrow-row {
+  text-align: center;
+  padding: 8px 0;
+  font-size: 1.5rem;
+  animation: bounceArrow 2s ease infinite;
+}
+
+.result-partner {
+  background: linear-gradient(145deg, rgba(210,238,255,0.8), rgba(225,245,255,0.9));
+  border: 1.5px solid rgba(120,190,240,0.4);
+  border-radius: 20px;
+  padding: 22px 22px;
+  margin-bottom: 18px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(100,170,230,0.12), inset 0 1px 0 rgba(255,255,255,0.8);
+}
+.result-partner::after {
+  content: '✨';
+  position: absolute;
+  top: 10px; right: 14px;
+  font-size: 1.1rem;
+  opacity: 0.5;
+  animation: twinkle 2s ease-in-out infinite;
+}
+.result-name-partner {
+  font-family: 'Mitr', sans-serif;
+  font-size: 2rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #3a8ed4 0%, #5bbcf0 60%, #7dd4ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.2;
+}
+
+.result-msg {
+  color: #7aaecc;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+/* Divider */
+.divider {
+  display: flex; align-items: center; gap: 12px;
+  margin: 22px 0;
+  color: #b0cfe0;
+  font-size: 0.78rem; letter-spacing: 0.08em;
+}
+.divider::before, .divider::after {
+  content: ''; flex: 1; height: 1px;
+  background: rgba(150,200,235,0.3);
+}
+
+/* Animations */
+@keyframes floatIn {
+  from { opacity: 0; transform: translateY(-28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes riseUp {
+  from { opacity: 0; transform: translateY(28px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes popCloud {
+  from { opacity: 0; transform: scale(0.9) translateY(10px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes floatBob {
+  0%,100% { transform: translateY(0); }
+  50%     { transform: translateY(-12px); }
+}
+@keyframes drift1 {
+  0%,100% { transform: translate(0,0); }
+  50%     { transform: translate(30px, 20px); }
+}
+@keyframes drift2 {
+  0%,100% { transform: translate(0,0); }
+  50%     { transform: translate(-25px, 15px); }
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes bounceArrow {
+  0%,100% { transform: translateY(0); }
+  50%     { transform: translateY(5px); }
+}
+@keyframes twinkle {
+  0%,100% { opacity: 0.3; transform: scale(1); }
+  50%     { opacity: 0.8; transform: scale(1.3); }
+}
+@keyframes shimmerBtn {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+</style>
+</head>
+<body>
+
+<!-- Fluffy bg blobs -->
+<div class="bg"></div>
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
+<div class="blob blob-4"></div>
+
+<div class="container">
+
+  <div class="header">
+    <span class="gift-icon">🎁</span>
+    <h1>จับคู่<span>ลับ</span></h1>
+    <p>กรอก @account ของคุณเพื่อดูว่าได้คู่ใคร</p>
+  </div>
+
+  <div class="card" id="mainCard">
+
+    <!-- Search form -->
+    <div id="searchForm">
+      <label class="input-label">Account ของคุณ</label>
+      <div class="input-wrap">
+        <input
+          type="text"
+          id="nameInput"
+          placeholder="ชื่อหรือ account..."
+          autocomplete="off"
+          autofocus
+        />
+        <span class="prefix">@</span>
+      </div>
+      <button class="btn btn-primary" id="searchBtn" onclick="lookupName()">
+        🔍 &nbsp;ดูคู่ลับของฉัน
+      </button>
+      <div class="error-box" id="errorBox"></div>
+    </div>
+
+    <!-- Loader -->
+    <div class="loader" id="loader">
+      <div class="spinner"></div>
+      กำลังค้นหา…
+    </div>
+
+    <!-- Result -->
+    <div class="result-card" id="resultCard">
+      <div class="result-you">
+        <div class="result-label">👤 คุณคือ</div>
+        <div class="result-name-you" id="resultYou"></div>
+      </div>
+      <div class="arrow-row">🎯</div>
+      <div class="result-partner">
+        <div class="result-label">🎁 คู่ที่คุณได้คือ</div>
+        <div class="result-name-partner" id="resultPartner"></div>
+      </div>
+      <p class="result-msg" id="resultMsg"></p>
+      <button class="btn btn-ghost" onclick="resetForm()">🔄 ค้นหาใหม่</button>
+    </div>
+
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
